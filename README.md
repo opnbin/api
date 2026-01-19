@@ -1,5 +1,13 @@
 ### Openbin API
-A simple Pastebin API written in Python using FastAPI and served by Uvicorn.
+A simple Pastebin API written in Python using FastAPI.
+
+| Method | Path    | Description                                               |
+|--------|---------|-----------------------------------------------------------|
+| POST   | `/`     | Create a new paste                                        |
+| GET    | `/[id]` | Read a paste                                              |
+| PUT    | `/[id]` | Update a paste                                            |
+| DELETE | `/[id]`   | Delete a paste                                          |
+| GET    | `/`     | List pastes (supports pagination, search, filters)        |
 
 #### Docker Setup
 - Create two files: one for the database and one for environment variables (e.g. `openbin.db` and `.env`).
@@ -12,4 +20,5 @@ OPENBIN_MAX_SIZE=1048576
 ```powershell
 docker run -p 8000:8000 -v /path/to/openbin.db:/app/db --env-file /path/to/openbin.env -d openbin-api
 ```
+
 **Running into issues or have ideas for further development? Let me know by [creating an issue](https://github.com/ronykax/openbin/issues).**
