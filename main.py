@@ -8,7 +8,7 @@ from models import PasteCreate, PasteUpdate, PasteResponse, PasteListResponse
 from auth import verify_token
 from utils import generate_id, generate_name
 
-app = FastAPI(title="Openbin", description="A simple pastebin API")
+app = FastAPI(title="Opnbin", description="A simple pastebin API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,7 +24,7 @@ def startup():
 
 def get_max_size() -> int:
     try:
-        return int(os.environ.get("OPENBIN_MAX_SIZE", 1048576))
+        return int(os.environ.get("OPNBIN_MAX_SIZE", 1048576))
     except ValueError:
         return 1048576
 
