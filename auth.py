@@ -5,7 +5,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 security = HTTPBearer()
 
 def verify_token(credentials: HTTPAuthorizationCredentials = Security(security)):
-    secret = os.environ.get("OPNBIN_SECRET")
+    secret = os.environ.get("OPENBIN_SECRET")
     if not secret:
         raise HTTPException(status_code=500, detail="server misconfigured")
     if credentials.credentials != secret:

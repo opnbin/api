@@ -1,4 +1,4 @@
-### Opnbin API
+### Openbin
 A simple Pastebin API written in Python using FastAPI.
 
 | Method | Path    | Description                                               |
@@ -11,15 +11,15 @@ A simple Pastebin API written in Python using FastAPI.
 | GET    | `/`     | List pastes (supports pagination, search, filters)        |
 
 #### Docker Setup
-- Create two files: one for the database and one for environment variables (e.g. `opnbin.db` and `.env`).
+- Create two files: one for the database and one for environment variables (e.g. `openbin.db` and `.env`).
 - Populate the `.env` file with the following variables:
 ```env
-OPNBIN_SECRET=abc123
-OPNBIN_MAX_SIZE=1048576
+OPENBIN_SECRET=abc123
+OPENBIN_MAX_SIZE=1048576
 ```
 - Start the container:
 ```powershell
-docker run -p 8000:8000 -v /path/to/opnbin.db:/app/db --env-file /path/to/opnbin.env -d opnbin-api
+docker run -p 8000:8000 -v /path/to/openbin.db:/app/db --env-file /path/to/openbin.env -d rkax/openbin-core
 ```
 
-**Running into issues or have ideas for further development? Let us know by [creating an issue](https://github.com/opnbin/api/issues).**
+**Running into issues or have ideas for further development? Let me know by [creating an issue](https://github.com/ronykax/openbin/issues).**

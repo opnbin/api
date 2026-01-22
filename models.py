@@ -13,6 +13,9 @@ class PasteUpdate(BaseModel):
     language: Optional[str] = None
     content: Optional[str] = None
 
+class PasteDelete(BaseModel):
+    ids: list[str]
+
 class PasteResponse(BaseModel):
     id: str
     name: str

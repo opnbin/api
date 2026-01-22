@@ -4,11 +4,11 @@ from fastapi import FastAPI, HTTPException, Depends, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import get_connection, init_db
-from models import PasteCreate, PasteUpdate, PasteResponse, PasteListResponse
+from models import PasteCreate, PasteUpdate, PasteDelete, PasteResponse, PasteListResponse
 from auth import verify_token
 from utils import generate_id, generate_name
 
-app = FastAPI(title="Opnbin", description="A simple pastebin API")
+app = FastAPI(title="Openbin", description="A simple 🗑️ pastebin API.")
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,7 +28,7 @@ def ping(_: str = Depends(verify_token)):
 
 def get_max_size() -> int:
     try:
-        return int(os.environ.get("OPNBIN_MAX_SIZE", 1048576))
+        return int(os.environ.get("OPENBIN_MAX_SIZE", 1048576))
     except ValueError:
         return 1048576
 
@@ -111,20 +111,27 @@ def update_paste(paste_id: str, paste: PasteUpdate, _: str = Depends(verify_toke
         updated_at=now
     )
 
-@app.delete("/{paste_id}")
-def delete_paste(paste_id: str, _: str = Depends(verify_token)):
+@app.delete("/")
+def delete_pastes(data: PasteDelete, _: str = Depends(verify_token)):
+    if not data.ids:
+        raise HTTPException(status_code=400, detail="no paste ids provided")
+
     conn = get_connection()
-    row = conn.execute("SELECT * FROM pastes WHERE id = ?", (paste_id,)).fetchone()
 
-    if not row:
+    placeholders = ",".join("?" for _ in data.ids)
+    rows = conn.execute(f"SELECT id FROM pastes WHERE id IN ({placeholders})", data.ids).fetchall()
+    found_ids = {row["id"] for row in rows}
+
+    missing_ids = [paste_id for paste_id in data.ids if paste_id not in found_ids]
+    if missing_ids:
         conn.close()
-        raise HTTPException(status_code=404, detail="paste not found")
+        raise HTTPException(status_code=404, detail=f"pastes not found: {', '.join(missing_ids)}")
 
-    conn.execute("DELETE FROM pastes WHERE id = ?", (paste_id,))
+    conn.execute(f"DELETE FROM pastes WHERE id IN ({placeholders})", data.ids)
     conn.commit()
     conn.close()
 
-    return {"message": "deleted"}
+    return {"message": "deleted", "count": len(data.ids)}
 
 @app.get("/", response_model=PasteListResponse)
 def list_pastes(
